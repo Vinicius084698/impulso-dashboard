@@ -274,7 +274,7 @@ export default function SaaS_Dashboard() {
                           paddingAngle={5}
                           dataKey="value"
                         >
-                          {data.demographics.gender.map((entry, index) => (
+                          {data.demographics.gender.map((entry: any, index: number) => (
                             <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                           ))}
                         </Pie>
@@ -351,7 +351,7 @@ export default function SaaS_Dashboard() {
                   <h2 className={styles.aiTitle}>Sugestões de Estratégia ({selectedUnit})</h2>
                 </div>
                 <div className={styles.aiContent}>
-                  {data.insights.map((insight, idx) => (
+                  {data.insights.map((insight: any, idx: number) => (
                     <div className={styles.aiInsightItem} key={idx}>
                       <Lightbulb size={20} className={styles.aiInsightIcon} />
                       <div>
@@ -378,7 +378,7 @@ export default function SaaS_Dashboard() {
                   </tr>
                 </thead>
                 <tbody>
-                  {data.campaigns.map((camp) => (
+                  {data.campaigns.map((camp: any) => (
                     <tr key={camp.id}>
                       <td><strong>{camp.name}</strong></td>
                       <td>
@@ -400,7 +400,7 @@ export default function SaaS_Dashboard() {
           {activeTab === "criativos" && (
             <>
               <div className={styles.creativesRow}>
-                {data.creatives.map((creative) => (
+                {data.creatives.map((creative: any) => (
                   <div key={creative.id} className={styles.creativeItem}>
                     <img 
                       src={creative.img} 
