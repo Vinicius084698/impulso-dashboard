@@ -65,8 +65,18 @@ export default function SaaS_Dashboard() {
 
   if (isLoading || !db) {
     return (
-      <div className={styles.dashboardWrapper} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#050505', color: '#ff5a00' }}>
+      <div className={styles.dashboardWrapper} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#050505', color: '#ff5a00', minHeight: '100vh' }}>
         <h2>Sincronizando com Facebook (Meta Graph API)...</h2>
+      </div>
+    );
+  }
+
+  if (db && db.error) {
+    return (
+      <div className={styles.dashboardWrapper} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', backgroundColor: '#050505', color: '#ef4444', minHeight: '100vh', gap: '1rem', padding: '2rem', textAlign: 'center' }}>
+        <h2>Erro de Integração com a API do Facebook</h2>
+        <p style={{ color: '#a1a1aa' }}>Mensagem do Facebook: {db.error}</p>
+        <p style={{ color: '#a1a1aa', maxWidth: '600px' }}>Verifique se o FB_TOKEN e o FB_ACT foram adicionados corretamente na aba "Environment Variables" da Vercel. Certifique-se de que não há espaços em branco no final do Token e faça um novo "Redeploy".</p>
       </div>
     );
   }
