@@ -119,13 +119,17 @@ export async function GET(request: Request) {
 
       const avgCpl = totalLeads > 0 ? totalInvested / totalLeads : 0;
       const convRate = totalClicks > 0 ? (totalLeads / totalClicks) * 100 : 0;
+      const avgCpm = totalImpressions > 0 ? (totalInvested / totalImpressions) * 1000 : 0;
+      const avgCtr = totalImpressions > 0 ? (totalClicks / totalImpressions) * 100 : 0;
 
       return {
         overview: {
           invested: totalInvested,
           leads: totalLeads,
           cpl: `R$ ${avgCpl.toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2})}`,
-          conv: `${convRate.toFixed(1)}%`
+          conv: `${convRate.toFixed(1)}%`,
+          cpm: `R$ ${avgCpm.toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2})}`,
+          ctr: `${avgCtr.toFixed(2)}%`
         },
         campaigns: unitCampaigns,
         creatives: unitAds.length > 0 ? unitAds : [

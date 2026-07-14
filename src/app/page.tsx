@@ -3,9 +3,9 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { 
-  Activity, Users, DollarSign, MousePointerClick, 
-  LayoutDashboard, Megaphone, Image as ImageIcon, Settings, Calendar, 
-  ArrowUpRight, ArrowDownRight, Sparkles, Lightbulb, RefreshCw, Calculator, PieChart as PieIcon
+  Activity, Calendar, ChevronDown, Download, Users, TrendingUp, 
+  BarChart as BarChartIcon, MousePointerClick, DollarSign, LayoutDashboard, Settings, Image as ImageIcon,
+  ArrowUpRight, ArrowDownRight, UserCheck, Calculator, BarChart3, Lightbulb, UserPlus, Target, PieChart as PieIcon, RefreshCw, Megaphone, Sparkles
 } from "lucide-react";
 import { 
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
@@ -23,10 +23,6 @@ export default function SaaS_Dashboard() {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [db, setDb] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
-
-  // ROAS Calculator State
-  const [offlineSales, setOfflineSales] = useState<string>("50");
-  const [avgTicket, setAvgTicket] = useState<string>("120");
 
   const getOneWeekAgo = () => {
     const d = new Date();
@@ -82,10 +78,6 @@ export default function SaaS_Dashboard() {
   }
 
   const data = db[selectedUnit];
-
-  // Calculated ROAS
-  const totalRevenue = (parseInt(offlineSales || "0") * parseFloat(avgTicket || "0"));
-  const currentRoas = totalRevenue > 0 ? (totalRevenue / data.overview.invested).toFixed(2) : "0.00";
 
   return (
     <div className={styles.dashboardWrapper}>
@@ -218,31 +210,21 @@ export default function SaaS_Dashboard() {
                   </div>
                 </div>
 
-                {/* ROAS CALCULATOR (INSPIRED BY ACARAÚ) */}
-                <div className={styles.glassCard} style={{ border: '1px solid rgba(16, 185, 129, 0.4)' }}>
+                {/* CTR AND CPM METRICS */}
+                <div className={styles.glassCard}>
                   <div className={styles.cardHeader}>
-                    <span style={{ color: '#10b981' }}>ROAS Estimado (Offline)</span>
-                    <Calculator size={18} color="#10b981" />
+                    <span>Qualidade dos Anúncios</span>
+                    <BarChart3 size={18} />
                   </div>
-                  <div className={styles.cardValue} style={{ color: '#10b981' }}>{currentRoas}x</div>
-                  <div className={styles.cardFooter} style={{ display: 'flex', gap: '0.5rem', marginTop: '1rem' }}>
-                    <input 
-                      type="number" 
-                      className={styles.formInput} 
-                      style={{ padding: '0.25rem 0.5rem', fontSize: '0.8rem', width: '50px' }} 
-                      value={offlineSales} 
-                      onChange={(e) => setOfflineSales(e.target.value)}
-                      title="Vendas Fechadas"
-                    />
-                    <span style={{ fontSize: '0.75rem', alignSelf: 'center' }}>vendas x</span>
-                    <input 
-                      type="number" 
-                      className={styles.formInput} 
-                      style={{ padding: '0.25rem 0.5rem', fontSize: '0.8rem', width: '60px' }} 
-                      value={avgTicket} 
-                      onChange={(e) => setAvgTicket(e.target.value)}
-                      title="Ticket Médio"
-                    />
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginTop: '1rem' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <span style={{ fontSize: '0.85rem', color: '#a1a1aa' }}>CTR Médio</span>
+                      <strong style={{ fontSize: '1.2rem' }}>{data.overview.ctr || '0%'}</strong>
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <span style={{ fontSize: '0.85rem', color: '#a1a1aa' }}>CPM Médio</span>
+                      <strong style={{ fontSize: '1.2rem' }}>{data.overview.cpm || 'R$ 0,00'}</strong>
+                    </div>
                   </div>
                 </div>
               </div>
