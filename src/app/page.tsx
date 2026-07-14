@@ -61,7 +61,7 @@ export default function SaaS_Dashboard() {
       setIsLoading(false);
       
       // Chamar IA em background após montar os gráficos iniciais
-      fetchAIInsights(data, unitIdToFetch);
+      // fetchAIInsights(data, unitIdToFetch);
       
     } catch (err) {
       console.error(err);
@@ -456,7 +456,7 @@ export default function SaaS_Dashboard() {
                 </div>
               </div>
 
-              {/* AI INSIGHTS SECTION */}
+              {/* AI INSIGHTS SECTION - TEMPORARILY DISABLED 
               <div className={styles.aiInsightsBox}>
                 <div className={styles.aiHeader}>
                   <Sparkles size={24} color="#ffae80" className={isAnalyzingAI ? styles.spinAnimation : ''} />
@@ -470,7 +470,6 @@ export default function SaaS_Dashboard() {
                       <div style={{ color: '#ffae80', fontSize: '0.9rem', fontStyle: 'italic' }}>
                         O Gestor de Tráfego Sênior está analisando seu funil de conversão, demografia e performance de campanhas. Aguarde um momento...
                       </div>
-                      {/* Skeletons */}
                       {[1, 2, 3].map((_, idx) => (
                         <div key={idx} style={{ height: '40px', background: 'rgba(255, 174, 128, 0.1)', borderRadius: '4px', animation: 'pulse 1.5s infinite ease-in-out' }}></div>
                       ))}
@@ -487,6 +486,7 @@ export default function SaaS_Dashboard() {
                   )}
                 </div>
               </div>
+              */}
             </>
           )}
 
