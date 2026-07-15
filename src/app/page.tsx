@@ -406,20 +406,53 @@ export default function SaaS_Dashboard() {
                 {/* BAR CHART: GENDER COMPARISON */}
                 <div className={styles.chartCard}>
                   <div className={styles.cardHeader}>Impressões por Gênero</div>
-                  <div style={{ height: 200, width: '100%' }}>
+                  <div style={{ height: 250, width: '100%' }}>
                     <ResponsiveContainer width="100%" height="100%">
-                      <BarChart data={data.demographics.gender} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+                      <BarChart data={data.demographics.gender} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
                         <CartesianGrid strokeDasharray="3 3" stroke="#333" vertical={false} />
-                        <XAxis dataKey="name" stroke="#888" tick={{fill: '#888', fontSize: 12}} />
+                        <XAxis dataKey="name" stroke="#888" tick={{fill: '#888'}} />
                         <YAxis stroke="#888" tick={{fill: '#888'}} />
-                        <Tooltip contentStyle={{ backgroundColor: '#111', borderColor: '#333', borderRadius: '8px' }} cursor={{fill: 'rgba(255,255,255,0.05)'}} />
+                        <Tooltip contentStyle={{ backgroundColor: '#111', borderColor: '#333', borderRadius: '8px' }} itemStyle={{ color: '#fff' }} cursor={{fill: '#222'}} />
                         <Legend wrapperStyle={{ paddingTop: '20px' }} />
-                        <Bar dataKey="Período Anterior" fill="#444" radius={[4, 4, 0, 0]} />
-                        <Bar dataKey="Período Atual" fill="#ff5a00" radius={[4, 4, 0, 0]} />
+                        <Bar name="Período Anterior" dataKey="Período Anterior" fill="#666" radius={[4, 4, 0, 0]} />
+                        <Bar name="Período Atual" dataKey="Período Atual" fill="#ff5a00" radius={[4, 4, 0, 0]} />
                       </BarChart>
                     </ResponsiveContainer>
                   </div>
                 </div>
+              </div>
+
+              {/* CAMPANHAS TABLE */}
+              <div className={styles.chartTitle} style={{ marginTop: '2rem' }}>Detalhamento por Campanha (Atual)</div>
+              <div className={styles.tableContainer}>
+                <table className={styles.dataTablet}>
+                  <thead>
+                    <tr>
+                      <th>Campanha</th>
+                      <th>Status</th>
+                      <th>Orçamento</th>
+                      <th>Valor Investido</th>
+                      <th>CPC</th>
+                      <th>CTR</th>
+                      <th>Leads</th>
+                      <th>CPL</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {data.campaigns.map((camp: any) => (
+                      <tr key={camp.id}>
+                        <td>{camp.name}</td>
+                        <td><span className={camp.status === 'Ativa' ? styles.statusActive : styles.statusPaused}>{camp.status}</span></td>
+                        <td>{camp.budget}</td>
+                        <td>{camp.spend}</td>
+                        <td>{camp.cpc}</td>
+                        <td>{camp.ctr}</td>
+                        <td>{camp.leads}</td>
+                        <td>{camp.cpl}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
 
               {/* CHARTS ROW (WITH COMPARISON) */}

@@ -78,9 +78,21 @@ export async function GET(request: Request) {
       return j.data || [];
     };
 
-    const accountRes = await fetch(`https://graph.facebook.com/v19.0/${safeActId}?fields=balance,currency&access_token=${token}`, { cache: 'no-store' });
+    const accountRes = await fetch(`https://graph.facebook.com/v19.0/${safeActId}?fields=balance,currency,funding_source_details&access_token=${token}`, { cache: 'no-store' });
     const accountInfo = await accountRes.json();
-    const accountBalance = accountInfo.balance ? (accountInfo.balance / 100) : 0;
+    let accountBalance = accountInfo.balance ? (accountInfo.balance / 100) : 0;
+    
+    // Attempt to parse prepaid balance from funding_source_details
+    if (accountInfo.funding_source_details && accountInfo.funding_source_details.display_amount) {
+      // display_amount is usually something like "R$ 856,23"
+      const numericStr = accountInfo.funding_source_details.display_amount.replace(/[^\d,-]/g, '').replace(',', '.');
+      const parsedAmount = parseFloat(numericStr);
+      if (!isNaN(parsedAmount)) {
+        accountBalance = parsedAmount;
+      }
+    } else if (accountInfo.funding_source_details && accountInfo.funding_source_details.amount) {
+      accountBalance = parseFloat(accountInfo.funding_source_details.amount);
+    }
 
     const results = await Promise.all(urls.map(fetchJson));
     let [campCurr, adsCurr, insPrev, ageCurr, agePrev, genCurr, genPrev] = results;
@@ -120,13 +132,21 @@ export async function GET(request: Request) {
       totalInvested += spend; totalLeads += leads;
       totalImpressions += parseInt(insights.impressions || '0', 10);
       totalClicks += parseInt(insights.clicks || '0', 10);
+      const clicks = parseInt(insights.clicks || '0', 10);
+      const impressions = parseInt(insights.impressions || '0', 10);
+      const ctr = impressions > 0 ? ((clicks / impressions) * 100).toFixed(2) : '0.00';
+      const cpc = clicks > 0 ? spend / clicks : 0;
 
       return {
         id: c.id, name: c.name, status: c.status === 'ACTIVE' ? 'Ativa' : 'Pausada',
-        budget: c.daily_budget ? `R$ ${(parseInt(c.daily_budget)/100).toFixed(2)}/dia` : 'Usando orçamento da conta',
+        budget: c.daily_budget ? `R$ ${(parseInt(c.daily_budget)/100).toFixed(2)}/dia` : 'O. da Conta',
         spend: `R$ ${spend.toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2})}`,
         leads: leads,
         cpl: `R$ ${(leads > 0 ? spend/leads : 0).toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2})}`,
+        cpc: `R$ ${cpc.toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2})}`,
+        ctr: `${ctr}%`,
+        clicks: clicks,
+        impressions: impressions
       };
     });
 
