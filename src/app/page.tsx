@@ -422,39 +422,6 @@ export default function SaaS_Dashboard() {
                 </div>
               </div>
 
-              {/* CAMPANHAS TABLE */}
-              <div className={styles.chartTitle} style={{ marginTop: '2rem' }}>Detalhamento por Campanha (Atual)</div>
-              <div className={styles.tableContainer}>
-                <table className={styles.dataTablet}>
-                  <thead>
-                    <tr>
-                      <th>Campanha</th>
-                      <th>Status</th>
-                      <th>Orçamento</th>
-                      <th>Valor Investido</th>
-                      <th>CPC</th>
-                      <th>CTR</th>
-                      <th>Leads</th>
-                      <th>CPL</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {data.campaigns.map((camp: any) => (
-                      <tr key={camp.id}>
-                        <td>{camp.name}</td>
-                        <td><span className={camp.status === 'Ativa' ? styles.statusActive : styles.statusPaused}>{camp.status}</span></td>
-                        <td>{camp.budget}</td>
-                        <td>{camp.spend}</td>
-                        <td>{camp.cpc}</td>
-                        <td>{camp.ctr}</td>
-                        <td>{camp.leads}</td>
-                        <td>{camp.cpl}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-
               {/* CHARTS ROW (WITH COMPARISON) */}
               <div className={styles.chartTitle} style={{ marginTop: '2rem' }}>Desempenho Geral</div>
               <div className={styles.chartsRow}>
@@ -546,29 +513,30 @@ export default function SaaS_Dashboard() {
           )}
 
           {activeTab === "campanhas" && data && (
-            <div className={styles.tableWrapper}>
-              <table className={styles.table}>
+            <div className={styles.tableContainer}>
+              <div className={styles.chartTitle} style={{ marginBottom: '1.5rem' }}>Detalhamento por Campanha (Atual)</div>
+              <table className={styles.dataTablet}>
                 <thead>
                   <tr>
-                    <th>Nome da Campanha</th>
+                    <th>Campanha</th>
                     <th>Status</th>
                     <th>Orçamento</th>
-                    <th>Valor Gasto</th>
+                    <th>Valor Investido</th>
+                    <th>CPC</th>
+                    <th>CTR</th>
                     <th>Leads</th>
-                    <th>Custo por Lead</th>
+                    <th>CPL</th>
                   </tr>
                 </thead>
                 <tbody>
                   {data.campaigns.map((camp: any) => (
                     <tr key={camp.id}>
                       <td><strong>{camp.name}</strong></td>
-                      <td>
-                        <span className={camp.status === "Ativa" ? styles.statusActive : styles.statusPaused}>
-                          {camp.status}
-                        </span>
-                      </td>
+                      <td><span className={camp.status === 'Ativa' ? styles.statusActive : styles.statusPaused}>{camp.status}</span></td>
                       <td>{camp.budget}</td>
                       <td>{camp.spend}</td>
+                      <td>{camp.cpc}</td>
+                      <td>{camp.ctr}</td>
                       <td>{camp.leads}</td>
                       <td><strong>{camp.cpl}</strong></td>
                     </tr>
