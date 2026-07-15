@@ -78,6 +78,10 @@ export async function GET(request: Request) {
       return j.data || [];
     };
 
+    const accountRes = await fetch(`https://graph.facebook.com/v19.0/${safeActId}?fields=balance,currency&access_token=${token}`, { cache: 'no-store' });
+    const accountInfo = await accountRes.json();
+    const accountBalance = accountInfo.balance ? (accountInfo.balance / 100) : 0;
+
     const results = await Promise.all(urls.map(fetchJson));
     let [campCurr, adsCurr, insPrev, ageCurr, agePrev, genCurr, genPrev] = results;
 
@@ -204,7 +208,9 @@ export async function GET(request: Request) {
         invested: totalInvested, leads: totalLeads, investedPrev: totalInvestedPrev, leadsPrev: totalLeadsPrev,
         cpl: totalLeads > 0 ? `R$ ${(totalInvested/totalLeads).toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2})}` : 'R$ 0,00',
         ctr: `${avgCtr.toFixed(2)}%`,
-        cpm: `R$ ${avgCpm.toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2})}`
+        cpm: `R$ ${avgCpm.toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2})}`,
+        cpc: totalClicks > 0 ? `R$ ${(totalInvested/totalClicks).toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2})}` : 'R$ 0,00',
+        balance: `R$ ${accountBalance.toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2})}`
       },
       campaigns: unitCampaigns,
       creatives: unitCreatives,

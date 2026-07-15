@@ -305,6 +305,28 @@ export default function SaaS_Dashboard() {
 
                 <div className={styles.glassCard}>
                   <div className={styles.cardHeader}>
+                    <span>Saldo na Conta</span>
+                    <DollarSign size={18} />
+                  </div>
+                  <div className={styles.cardValue}>{data.overview.balance}</div>
+                  <div className={styles.cardFooter}>
+                    <span style={{color: '#a1a1aa'}}>Disponível / Atual</span>
+                  </div>
+                </div>
+
+                <div className={styles.glassCard}>
+                  <div className={styles.cardHeader}>
+                    <span>CPC Médio</span>
+                    <MousePointerClick size={18} />
+                  </div>
+                  <div className={styles.cardValue}>{data.overview.cpc}</div>
+                  <div className={styles.cardFooter}>
+                    <span style={{color: '#a1a1aa'}}>Custo por clique</span>
+                  </div>
+                </div>
+
+                <div className={styles.glassCard}>
+                  <div className={styles.cardHeader}>
                     <span>Total de Leads</span>
                     <Users size={18} />
                   </div>
