@@ -8,19 +8,19 @@
 }
 
 .sidebar {
-  width: 250px;
+  width: 220px;
   background-color: #0f0f13;
   border-right: 1px solid #222;
   display: flex;
   flex-direction: column;
-  padding: 1.5rem;
+  padding: 1rem;
 }
 
 .sidebarBrand {
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   font-weight: 800;
   color: #ff5a00;
-  margin-bottom: 3rem;
+  margin-bottom: 1.5rem;
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -68,7 +68,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 2rem 3rem 1rem 3rem;
+  padding: 1rem 2rem 0.5rem 2rem;
   z-index: 1;
 }
 
@@ -144,7 +144,7 @@
 @keyframes spin { 100% { transform: rotate(360deg); } }
 
 .contentContainer {
-  padding: 2rem 3rem;
+  padding: 0.5rem 2rem;
   z-index: 1;
 }
 
@@ -152,8 +152,8 @@
 .metricsRow {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 1.5rem;
-  margin-bottom: 2rem;
+  gap: 1rem;
+  margin-bottom: 1rem;
 }
 
 .glassCard {
@@ -162,7 +162,7 @@
   -webkit-backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.05);
   border-radius: 16px;
-  padding: 1.5rem;
+  padding: 1rem;
   transition: transform 0.2s, box-shadow 0.2s;
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
 }
@@ -179,11 +179,11 @@
   color: #a1a1aa;
   font-size: 0.875rem;
   font-weight: 500;
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
 }
 
 .cardValue {
-  font-size: 2.5rem;
+  font-size: 1.75rem;
   font-weight: 700;
   color: #fff;
 }
@@ -203,8 +203,8 @@
 .chartsRow {
   display: grid;
   grid-template-columns: 2fr 1fr;
-  gap: 1.5rem;
-  margin-bottom: 2rem;
+  gap: 1rem;
+  margin-bottom: 1rem;
 }
 
 .chartCard {
@@ -212,13 +212,13 @@
   backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.05);
   border-radius: 16px;
-  padding: 1.5rem;
+  padding: 1rem;
 }
 
 .chartTitle {
-  font-size: 1.125rem;
+  font-size: 1rem;
   font-weight: 600;
-  margin-bottom: 1.5rem;
+  margin-bottom: 0.75rem;
   color: #fff;
 }
 

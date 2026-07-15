@@ -384,7 +384,7 @@ export default function SaaS_Dashboard() {
                 {/* BAR CHART: GENDER COMPARISON */}
                 <div className={styles.chartCard}>
                   <div className={styles.cardHeader}>Impressões por Gênero</div>
-                  <div style={{ height: 250, width: '100%' }}>
+                  <div style={{ height: 200, width: '100%' }}>
                     <ResponsiveContainer width="100%" height="100%">
                       <BarChart data={data.demographics.gender} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
                         <CartesianGrid strokeDasharray="3 3" stroke="#333" vertical={false} />
@@ -406,7 +406,7 @@ export default function SaaS_Dashboard() {
                 {/* AREA CHART - COMPARISON */}
                 <div className={styles.chartCard}>
                   <div className={styles.cardHeader}>Comparativo de Leads: Semana Atual x Semana Passada</div>
-                  <div style={{ height: 300, width: '100%' }}>
+                  <div style={{ height: 200, width: '100%' }}>
                     <ResponsiveContainer width="100%" height="100%">
                       <AreaChart data={data.timeSeries} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
                         <defs>
@@ -437,7 +437,7 @@ export default function SaaS_Dashboard() {
                 {/* BAR CHART - COMPARISON */}
                 <div className={styles.chartCard}>
                   <div className={styles.cardHeader}>Funil Comparativo (x1000)</div>
-                  <div style={{ height: 300, width: '100%' }}>
+                  <div style={{ height: 200, width: '100%' }}>
                     <ResponsiveContainer width="100%" height="100%">
                       <BarChart data={data.funnel} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                         <CartesianGrid strokeDasharray="3 3" stroke="#333" vertical={false} />
