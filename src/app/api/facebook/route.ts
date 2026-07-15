@@ -150,6 +150,12 @@ export async function GET(request: Request) {
       };
     });
 
+    unitCampaigns.sort((a: any, b: any) => {
+      if (a.status === 'Ativa' && b.status !== 'Ativa') return -1;
+      if (a.status !== 'Ativa' && b.status === 'Ativa') return 1;
+      return 0;
+    });
+
     let unitCreatives = adsCurr.map((ad: any) => {
       const insights = ad.insights?.data?.[0] || {};
       const spend = parseFloat(insights.spend || '0');
