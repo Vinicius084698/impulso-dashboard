@@ -78,13 +78,12 @@ export async function GET(request: Request) {
       return j.data || [];
     };
 
-    const accountRes = await fetch(`https://graph.facebook.com/v19.0/${safeActId}?fields=balance,currency,funding_source_details&access_token=${token}`, { cache: 'no-store' });
+    const accountRes = await fetch(`https://graph.facebook.com/v19.0/${safeActId}?fields=balance,currency,funding_source_details,amount_spent,spend_cap&access_token=${token}`, { cache: 'no-store' });
     const accountInfo = await accountRes.json();
     let accountBalance = accountInfo.balance ? (accountInfo.balance / 100) : 0;
     
-    // Attempt to parse prepaid balance from funding_source_details
+    // Attempt 1: Parse prepaid balance from funding_source_details
     if (accountInfo.funding_source_details && accountInfo.funding_source_details.display_amount) {
-      // display_amount is usually something like "R$ 856,23"
       const numericStr = accountInfo.funding_source_details.display_amount.replace(/[^\d,-]/g, '').replace(',', '.');
       const parsedAmount = parseFloat(numericStr);
       if (!isNaN(parsedAmount)) {
@@ -92,6 +91,17 @@ export async function GET(request: Request) {
       }
     } else if (accountInfo.funding_source_details && accountInfo.funding_source_details.amount) {
       accountBalance = parseFloat(accountInfo.funding_source_details.amount);
+    }
+    
+    // Attempt 2: Industry workaround for Prepaid (spend_cap - amount_spent)
+    if (accountInfo.spend_cap && parseInt(accountInfo.spend_cap) > 0) {
+       const spendCap = parseInt(accountInfo.spend_cap) / 100;
+       const amountSpent = accountInfo.amount_spent ? (parseInt(accountInfo.amount_spent) / 100) : 0;
+       const calcBalance = spendCap - amountSpent;
+       // Only use if it makes sense (e.g., greater than 0 and different from normal balance)
+       if (calcBalance > 0) {
+         accountBalance = calcBalance;
+       }
     }
 
     const results = await Promise.all(urls.map(fetchJson));
