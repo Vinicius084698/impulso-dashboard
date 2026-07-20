@@ -58,6 +58,21 @@ export async function GET(request: Request) {
       return leads;
     };
 
+    const getPurchases = (actions: any[]) => {
+      if (!actions) return 0;
+      let purchases = 0;
+      for (const act of actions) {
+        if (
+          act.action_type === 'purchase' || 
+          act.action_type === 'offsite_conversion.fb_pixel_purchase' ||
+          act.action_type === 'onsite_conversion.purchase'
+        ) {
+          purchases += parseInt(act.value || '0', 10);
+        }
+      }
+      return purchases;
+    };
+
     const safeActId = actId.startsWith('act_') ? actId : `act_${actId}`;
     const token = session.accessToken;
 
@@ -134,18 +149,23 @@ export async function GET(request: Request) {
     }
 
     // Process Current Totals
-    let totalInvested = 0; let totalLeads = 0; let totalImpressions = 0; let totalClicks = 0;
+    let totalInvested = 0; let totalLeads = 0; let totalPurchases = 0; let totalImpressions = 0; let totalClicks = 0;
     const unitCampaigns = campCurr.map((c: any) => {
       const insights = c.insights?.data?.[0] || {};
       const spend = parseFloat(insights.spend || '0');
       const leads = getLeads(insights.actions);
-      totalInvested += spend; totalLeads += leads;
+      const purchases = getPurchases(insights.actions);
+      
+      totalInvested += spend; 
+      totalLeads += leads;
+      totalPurchases += purchases;
       totalImpressions += parseInt(insights.impressions || '0', 10);
       totalClicks += parseInt(insights.clicks || '0', 10);
       const clicks = parseInt(insights.clicks || '0', 10);
       const impressions = parseInt(insights.impressions || '0', 10);
       const ctr = impressions > 0 ? ((clicks / impressions) * 100).toFixed(2) : '0.00';
       const cpc = clicks > 0 ? spend / clicks : 0;
+      const cpa = purchases > 0 ? spend / purchases : 0;
 
       return {
         id: c.id, name: c.name, status: c.status === 'ACTIVE' ? 'Ativa' : 'Pausada',
@@ -153,6 +173,8 @@ export async function GET(request: Request) {
         spend: `R$ ${spend.toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2})}`,
         leads: leads,
         cpl: `R$ ${(leads > 0 ? spend/leads : 0).toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2})}`,
+        purchases: purchases,
+        cpa: `R$ ${cpa.toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2})}`,
         cpc: `R$ ${cpc.toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2})}`,
         ctr: `${ctr}%`,
         clicks: clicks,
@@ -198,10 +220,11 @@ export async function GET(request: Request) {
     });
 
     // Process Prev Totals
-    let totalInvestedPrev = 0; let totalLeadsPrev = 0; let totalImpressionsPrev = 0; let totalClicksPrev = 0;
+    let totalInvestedPrev = 0; let totalLeadsPrev = 0; let totalPurchasesPrev = 0; let totalImpressionsPrev = 0; let totalClicksPrev = 0;
     for (const i of insPrev) {
       totalInvestedPrev += parseFloat(i.spend || '0');
       totalLeadsPrev += getLeads(i.actions);
+      totalPurchasesPrev += getPurchases(i.actions);
       totalImpressionsPrev += parseInt(i.impressions || '0', 10);
       totalClicksPrev += parseInt(i.clicks || '0', 10);
     }
@@ -218,7 +241,7 @@ export async function GET(request: Request) {
         if (val) map[val] = (map[val] || 0) + imp;
       }
       return map;
-    };
+    }
 
     const ageMapCurr = groupDemo(ageCurr, 'age');
     const ageMapPrev = groupDemo(agePrev, 'age');
@@ -242,7 +265,9 @@ export async function GET(request: Request) {
     const dbResponse = {
       overview: {
         invested: totalInvested, leads: totalLeads, investedPrev: totalInvestedPrev, leadsPrev: totalLeadsPrev,
+        purchases: totalPurchases, purchasesPrev: totalPurchasesPrev,
         cpl: totalLeads > 0 ? `R$ ${(totalInvested/totalLeads).toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2})}` : 'R$ 0,00',
+        cpa: totalPurchases > 0 ? `R$ ${(totalInvested/totalPurchases).toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2})}` : 'R$ 0,00',
         ctr: `${avgCtr.toFixed(2)}%`,
         cpm: `R$ ${avgCpm.toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2})}`,
         cpc: totalClicks > 0 ? `R$ ${(totalInvested/totalClicks).toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2})}` : 'R$ 0,00',

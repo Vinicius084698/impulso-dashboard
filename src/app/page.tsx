@@ -339,6 +339,29 @@ export default function SaaS_Dashboard() {
 
                 <div className={styles.glassCard}>
                   <div className={styles.cardHeader}>
+                    <span>Total de Vendas</span>
+                    <DollarSign size={18} />
+                  </div>
+                  <div className={styles.cardValue}>{data.overview.purchases}</div>
+                  <div className={styles.cardFooter}>
+                    <ArrowUpRight size={16} className={styles.trendUp} />
+                    <span className={styles.trendUp}>{data.overview.purchasesPrev} anterior</span>
+                  </div>
+                </div>
+
+                <div className={styles.glassCard}>
+                  <div className={styles.cardHeader}>
+                    <span>CPA Atual</span>
+                    <DollarSign size={18} />
+                  </div>
+                  <div className={styles.cardValue}>{data.overview.cpa}</div>
+                  <div className={styles.cardFooter}>
+                    <span style={{color: '#a1a1aa'}}>Custo por Aquisição</span>
+                  </div>
+                </div>
+
+                <div className={styles.glassCard}>
+                  <div className={styles.cardHeader}>
                     <span>CPL Atual</span>
                     <MousePointerClick size={18} />
                   </div>
@@ -526,6 +549,8 @@ export default function SaaS_Dashboard() {
                     <th>CTR</th>
                     <th>Leads</th>
                     <th>CPL</th>
+                    <th>Vendas</th>
+                    <th>CPA</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -539,6 +564,8 @@ export default function SaaS_Dashboard() {
                       <td>{camp.ctr}</td>
                       <td>{camp.leads}</td>
                       <td><strong>{camp.cpl}</strong></td>
+                      <td>{camp.purchases}</td>
+                      <td><strong>{camp.cpa}</strong></td>
                     </tr>
                   ))}
                 </tbody>
