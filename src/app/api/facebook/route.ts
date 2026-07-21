@@ -45,18 +45,31 @@ export async function GET(request: Request) {
 
     const getLeads = (actions: any[]) => {
       if (!actions) return 0;
-      let webLeads = 0;
-      let msgLeads = 0;
+      let msgStarted = 0;
+      let msgReply = 0;
+      let formLeads = 0;
+      let genericLeads = 0;
+
       for (const act of actions) {
-        if (act.action_type === 'lead') {
-          webLeads += parseInt(act.value || '0', 10);
-        }
-        // Avoid double counting if Facebook returns both 'started' and 'first_reply' for the same conversation
-        if (act.action_type === 'onsite_conversion.messaging_conversation_started_7d' || act.action_type === 'onsite_conversion.messaging_first_reply') {
-          msgLeads = Math.max(msgLeads, parseInt(act.value || '0', 10));
+        const val = parseInt(act.value || '0', 10);
+        if (act.action_type === 'onsite_conversion.messaging_conversation_started_7d') {
+          msgStarted = Math.max(msgStarted, val);
+        } else if (act.action_type === 'onsite_conversion.messaging_first_reply') {
+          msgReply = Math.max(msgReply, val);
+        } else if (act.action_type === 'lead') {
+          formLeads = Math.max(formLeads, val);
+        } else if (act.action_type === 'leadgen_grouped' || act.action_type === 'offsite_conversion.fb_pixel_lead') {
+          genericLeads = Math.max(genericLeads, val);
         }
       }
-      return webLeads + msgLeads;
+
+      // Return primary lead action for the campaign to prevent double counting duplicates
+      if (msgStarted > 0) return msgStarted;
+      if (msgReply > 0) return msgReply;
+      if (formLeads > 0) return formLeads;
+      if (genericLeads > 0) return genericLeads;
+
+      return 0;
     };
 
     const getPurchases = (actions: any[]) => {
