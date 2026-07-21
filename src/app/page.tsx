@@ -300,7 +300,7 @@ export default function SaaS_Dashboard() {
                   <div className={styles.cardValue}>R$ {data.overview.invested.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</div>
                   <div className={styles.cardFooter}>
                     <ArrowUpRight size={16} className={styles.trendUp} />
-                    <span className={styles.trendUp}>+5%</span> <span>vs semana anterior</span>
+                    <span className={styles.trendUp}>+5%</span> <span>vs período anterior</span>
                   </div>
                 </div>
 
@@ -363,7 +363,7 @@ export default function SaaS_Dashboard() {
                     ) : (
                       <><ArrowUpRight size={16} className={styles.trendDown} /><span className={styles.trendDown}>+15%</span></>
                     )}
-                    <span> vs semana anterior</span>
+                    <span> vs período anterior</span>
                   </div>
                 </div>
 
