@@ -237,7 +237,10 @@ export default function SaaS_Dashboard() {
               <select 
                 className={styles.unitSelector} 
                 value={selectedUnit}
-                onChange={(e) => setSelectedUnit(e.target.value)}
+                onChange={(e) => {
+                  setSelectedUnit(e.target.value);
+                  setCampaignFilter("");
+                }}
               >
                 {availableAccounts.map((acc: any) => (
                   <option key={acc.account_id} value={acc.account_id}>{acc.name}</option>
