@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { 
   Activity, Calendar, ChevronDown, Download, Users, TrendingUp, 
@@ -33,6 +33,19 @@ export default function SaaS_Dashboard() {
   const [isAnalyzingAI, setIsAnalyzingAI] = useState(false);
   const [selectedCreative, setSelectedCreative] = useState<any>(null);
   const [creativeFilter, setCreativeFilter] = useState("Ativa");
+  const [isUnitDropdownOpen, setIsUnitDropdownOpen] = useState(false);
+  const [unitSearchTerm, setUnitSearchTerm] = useState("");
+  const unitDropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (unitDropdownRef.current && !unitDropdownRef.current.contains(event.target as Node)) {
+        setIsUnitDropdownOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   const getOneWeekAgo = () => {
     const d = new Date();
@@ -234,15 +247,89 @@ export default function SaaS_Dashboard() {
           
           <div className={styles.topbarControls}>
             {activeTab !== "configuracoes" && availableAccounts.length > 0 && (
-              <select 
-                className={styles.unitSelector} 
-                value={selectedUnit}
-                onChange={(e) => setSelectedUnit(e.target.value)}
-              >
-                {availableAccounts.map((acc: any) => (
-                  <option key={acc.account_id} value={acc.account_id}>{acc.name}</option>
-                ))}
-              </select>
+              <div ref={unitDropdownRef} style={{ position: 'relative', width: '260px' }}>
+                <div 
+                  className={styles.unitSelector}
+                  style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', cursor: 'pointer', paddingRight: '0.8rem' }}
+                  onClick={() => setIsUnitDropdownOpen(!isUnitDropdownOpen)}
+                >
+                  <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                    {availableAccounts.find((a: any) => a.account_id === selectedUnit)?.name || "Selecionar Franquia..."}
+                  </span>
+                  <ChevronDown size={16} color="#a1a1aa" />
+                </div>
+
+                {isUnitDropdownOpen && (
+                  <div style={{
+                    position: 'absolute',
+                    top: 'calc(100% + 4px)',
+                    left: 0,
+                    right: 0,
+                    background: '#18181b',
+                    border: '1px solid #3f3f46',
+                    borderRadius: '8px',
+                    boxShadow: '0 10px 25px rgba(0,0,0,0.5)',
+                    zIndex: 9999,
+                    padding: '0.5rem',
+                    maxHeight: '300px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '0.5rem'
+                  }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: '#27272a', padding: '0.4rem 0.6rem', borderRadius: '6px' }}>
+                      <Search size={14} color="#a1a1aa" />
+                      <input 
+                        type="text"
+                        placeholder="Pesquisar franquia..."
+                        value={unitSearchTerm}
+                        onChange={(e) => setUnitSearchTerm(e.target.value)}
+                        style={{ background: 'transparent', border: 'none', color: '#fff', fontSize: '0.85rem', outline: 'none', width: '100%' }}
+                        autoFocus
+                      />
+                      {unitSearchTerm && (
+                        <X size={14} color="#a1a1aa" style={{ cursor: 'pointer' }} onClick={() => setUnitSearchTerm('')} />
+                      )}
+                    </div>
+
+                    <div style={{ overflowY: 'auto', maxHeight: '220px', display: 'flex', flexDirection: 'column' }}>
+                      {availableAccounts
+                        .filter((acc: any) => acc.name.toLowerCase().includes(unitSearchTerm.toLowerCase()))
+                        .map((acc: any) => (
+                          <div 
+                            key={acc.account_id}
+                            onClick={() => {
+                              setSelectedUnit(acc.account_id);
+                              setIsUnitDropdownOpen(false);
+                              setUnitSearchTerm('');
+                            }}
+                            style={{
+                              padding: '0.6rem 0.8rem',
+                              fontSize: '0.85rem',
+                              borderRadius: '4px',
+                              cursor: 'pointer',
+                              color: acc.account_id === selectedUnit ? '#ffae80' : '#e4e4e7',
+                              background: acc.account_id === selectedUnit ? 'rgba(255, 174, 128, 0.15)' : 'transparent',
+                              transition: 'background 0.2s'
+                            }}
+                            onMouseEnter={(e) => {
+                              if (acc.account_id !== selectedUnit) e.currentTarget.style.background = '#27272a';
+                            }}
+                            onMouseLeave={(e) => {
+                              if (acc.account_id !== selectedUnit) e.currentTarget.style.background = 'transparent';
+                            }}
+                          >
+                            {acc.name}
+                          </div>
+                        ))}
+                      {availableAccounts.filter((acc: any) => acc.name.toLowerCase().includes(unitSearchTerm.toLowerCase())).length === 0 && (
+                        <div style={{ padding: '0.8rem', fontSize: '0.85rem', color: '#71717a', textAlign: 'center' }}>
+                          Nenhuma franquia encontrada
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
             )}
 
             {activeTab !== "configuracoes" && db && !db.error && (
