@@ -32,7 +32,7 @@ export default function SaaS_Dashboard() {
   const [isLoading, setIsLoading] = useState(true);
   const [isAnalyzingAI, setIsAnalyzingAI] = useState(false);
   const [selectedCreative, setSelectedCreative] = useState<any>(null);
-  const [creativeFilter, setCreativeFilter] = useState("Ativas");
+  const [creativeFilter, setCreativeFilter] = useState("Ativa");
 
   const getOneWeekAgo = () => {
     const d = new Date();
@@ -573,8 +573,8 @@ export default function SaaS_Dashboard() {
                   value={creativeFilter}
                   onChange={(e) => setCreativeFilter(e.target.value)}
                 >
-                  <option value="Ativas">Apenas Ativos</option>
-                  <option value="Pausadas">Apenas Pausados</option>
+                  <option value="Ativa">Apenas Ativos</option>
+                  <option value="Pausada">Apenas Pausados</option>
                   <option value="Todas">Mostrar Todos</option>
                 </select>
               </div>
