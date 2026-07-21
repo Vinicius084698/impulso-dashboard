@@ -32,6 +32,7 @@ export default function SaaS_Dashboard() {
   const [isLoading, setIsLoading] = useState(true);
   const [isAnalyzingAI, setIsAnalyzingAI] = useState(false);
   const [selectedCreative, setSelectedCreative] = useState<any>(null);
+  const [creativeFilter, setCreativeFilter] = useState("Ativas");
 
   const getOneWeekAgo = () => {
     const d = new Date();
@@ -565,8 +566,20 @@ export default function SaaS_Dashboard() {
 
           {activeTab === "criativos" && data && (
             <>
+              <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '1rem' }}>
+                <select 
+                  className={styles.searchBar} 
+                  style={{ width: 'auto', padding: '0.5rem 1rem' }}
+                  value={creativeFilter}
+                  onChange={(e) => setCreativeFilter(e.target.value)}
+                >
+                  <option value="Ativas">Apenas Ativos</option>
+                  <option value="Pausadas">Apenas Pausados</option>
+                  <option value="Todas">Mostrar Todos</option>
+                </select>
+              </div>
               <div className={styles.creativesRow}>
-                {data.creatives.map((creative: any) => (
+                {data.creatives.filter((c: any) => creativeFilter === "Todas" || c.status === creativeFilter).map((creative: any) => (
                   <div key={creative.id} className={styles.creativeItem} onClick={() => setSelectedCreative(creative)} style={{ cursor: 'pointer' }}>
                     <img 
                       src={creative.img} 

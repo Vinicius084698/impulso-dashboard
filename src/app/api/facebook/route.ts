@@ -202,6 +202,7 @@ export async function GET(request: Request) {
         id: ad.id, 
         title: ad.name, 
         campaign: ad.campaign?.name || 'Desconhecida',
+        status: ad.campaign?.status === 'ACTIVE' ? 'Ativa' : 'Pausada',
         img: ad.creative?.image_url || ad.creative?.thumbnail_url || 'https://via.placeholder.com/300x150?text=Ad+Creative',
         label: 'Criativo', 
         leads: leads,
