@@ -45,17 +45,18 @@ export async function GET(request: Request) {
 
     const getLeads = (actions: any[]) => {
       if (!actions) return 0;
-      let leads = 0;
+      let webLeads = 0;
+      let msgLeads = 0;
       for (const act of actions) {
-        if (
-          act.action_type === 'onsite_conversion.messaging_conversation_started_7d' || 
-          act.action_type === 'lead' || 
-          act.action_type === 'onsite_conversion.messaging_first_reply'
-        ) {
-          leads += parseInt(act.value || '0', 10);
+        if (act.action_type === 'lead') {
+          webLeads += parseInt(act.value || '0', 10);
+        }
+        // Avoid double counting if Facebook returns both 'started' and 'first_reply' for the same conversation
+        if (act.action_type === 'onsite_conversion.messaging_conversation_started_7d' || act.action_type === 'onsite_conversion.messaging_first_reply') {
+          msgLeads = Math.max(msgLeads, parseInt(act.value || '0', 10));
         }
       }
-      return leads;
+      return webLeads + msgLeads;
     };
 
     const getPurchases = (actions: any[]) => {
