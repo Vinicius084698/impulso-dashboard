@@ -79,7 +79,7 @@ export async function GET(request: Request) {
 
     const urls = [
       `https://graph.facebook.com/v19.0/${safeActId}/campaigns?fields=name,status,objective,daily_budget,insights.time_range(${trCurrent}){impressions,clicks,cpc,ctr,spend,actions}&access_token=${token}&limit=100`,
-      `https://graph.facebook.com/v19.0/${safeActId}/ads?fields=name,campaign{name},creative{image_url,thumbnail_url},insights.time_range(${trCurrent}){spend,actions,impressions,clicks}&access_token=${token}&limit=100`,
+      `https://graph.facebook.com/v19.0/${safeActId}/ads?fields=name,status,campaign{name,status},creative{image_url,thumbnail_url},insights.time_range(${trCurrent}){spend,actions,impressions,clicks}&access_token=${token}&limit=100`,
       `https://graph.facebook.com/v19.0/${safeActId}/insights?level=campaign&fields=campaign_name,impressions,clicks,spend,actions&time_range=${trPrev}&access_token=${token}&limit=100`,
       `https://graph.facebook.com/v19.0/${safeActId}/insights?level=campaign&breakdowns=age&fields=campaign_name,impressions&time_range=${trCurrent}&access_token=${token}&limit=100`,
       `https://graph.facebook.com/v19.0/${safeActId}/insights?level=campaign&breakdowns=age&fields=campaign_name,impressions&time_range=${trPrev}&access_token=${token}&limit=100`,
