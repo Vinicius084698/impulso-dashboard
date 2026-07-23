@@ -142,14 +142,20 @@ export async function GET(request: Request) {
       const isMatch = (name: string) => {
         if (!name) return false;
         const lowerName = name.toLowerCase();
-        
+
         if (lowerFilter === 'barra mansa') {
-          return lowerName.includes('barra mansa') || lowerName.includes('[bm]');
+          // Include only BM tagged campaigns, never VR/IMP campaigns
+          const isBM = lowerName.includes('barra mansa') || lowerName.includes('[bm]');
+          const isVR = lowerName.includes('volta redonda') || lowerName.includes('[imp]') || lowerName.includes('[vr]');
+          return isBM && !isVR;
         }
         if (lowerFilter === 'volta redonda') {
-          return lowerName.includes('volta redonda') || lowerName.includes('[imp]') || lowerName.includes('[vr]');
+          // Include only VR/IMP tagged campaigns, never BM campaigns
+          const isVR = lowerName.includes('volta redonda') || lowerName.includes('[imp]') || lowerName.includes('[vr]');
+          const isBM = lowerName.includes('barra mansa') || lowerName.includes('[bm]');
+          return isVR && !isBM;
         }
-        
+
         return lowerName.includes(lowerFilter);
       };
 
